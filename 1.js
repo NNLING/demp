@@ -5,27 +5,26 @@ window.onload = function (){
 		this.disY = 0;
 		var _this = this;
 		this.obj.addEventListener('mousedown',function (ev){
-			_this.fnDown(ev)
+			_this.fnDown(ev,_this)
 		})
 	};
-	Drag.prototype.fnDown = function (ev){
-		disX = ev.pageX - this.obj.offsetLeft;
-		disY = ev.pageY - this.obj.offsetTop;
-		var that = this;
-		document.addEventListener('mousemove',Move);
-		function Move(){
+	Drag.prototype.fnDown = function (ev,that){
+		this.disX = ev.pageX - this.obj.offsetLeft;
+		this.disY = ev.pageY - this.obj.offsetTop;
+		document.addEventListener('mousemove',Move)
+		document.addEventListener('mouseup',Up)
+		function Move(ev){
 			that.fnMove(ev)
 		}
-		document.addEventListener('mouseup',Up)
 		function Up(){
-			that.fnUp();
+			that.fnUp(Move,Up);
 		}
 	};
 	Drag.prototype.fnMove = function (ev){
-		this.obj.style.left = ev.pageX - disX + 'px';
-		this.obj.style.top = ev.pageY - disY + 'px'
+		this.obj.style.left = ev.pageX - this.disX + 'px';
+		this.obj.style.top = ev.pageY - this.disY + 'px'
 	};
-	Drag.prototype.fnUp = function (){
+	Drag.prototype.fnUp = function (Move,Up){
 		document.removeEventListener('mousemove',Move);
 		document.removeEventListener('mouseup',Up);
 	}
